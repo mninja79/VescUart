@@ -8,7 +8,10 @@
 
 class VescUart
 {
-
+public:
+    enum class CommStatus { OK, TIMEOUT, CRC_ERROR, INVALID_DATA, UNKNOWN_ERROR };
+private:
+	
 	/** Struct to store the telemetry data returned by the VESC */
 	struct dataPackage {
        float avgMotorCurrent;
@@ -38,7 +41,7 @@ class VescUart
 	};
 
     struct FWversionPackage {
-        uint8_t major;
+       uint8_t major;
         uint8_t minor;
     };
 
@@ -77,7 +80,7 @@ class VescUart
          *
          * @return     True if successfull otherwise false
          */
-        bool getFWversion(void);
+        CommStatus getFWversion(void);
 
         /**
          * @brief      Populate the firmware version variables
@@ -85,14 +88,14 @@ class VescUart
          * @param      canId  - The CAN ID of the VESC
          * @return     True if successfull otherwise false
          */
-        bool getFWversion(uint8_t canId);
+        CommStatus getFWversion(uint8_t canId);
 
         /**
          * @brief      Sends a command to VESC and stores the returned data
          *
          * @return     True if successfull otherwise false
          */
-        bool getVescValues(void);
+        CommStatus getVescValues(void);
 
         /**
          * @brief      Sends a command to VESC and stores the returned data
@@ -100,7 +103,7 @@ class VescUart
          *
          * @return     True if successfull otherwise false
          */
-        bool getVescValues(uint8_t canId);
+        CommStatus getVescValues(uint8_t canId);
 
         /**
          * @brief      Sends values for joystick and buttons to the nunchuck app
@@ -181,6 +184,22 @@ class VescUart
          */
         void printVescValues(void);
 
+        /**
+         * @brief      Extracts the data from the received payload
+         *
+         * @param      message  - The payload to extract data from
+         * @return     True if the process was a success
+         */
+        CommStatus processReadPacket(uint8_t * message);
+
+        /**
+         * @brief      Receives the message over Serial
+         *
+         * @param      payloadReceived  - The received payload as a unit8_t Array
+         * @return     The number of bytes receeived within the payload
+         */
+        CommStatus receiveUartMessage(uint8_t * payloadReceived);
+
 	private: 
 
 		/** Variabel to hold the reference to the Serial object to use for UART */
@@ -199,13 +218,13 @@ class VescUart
 		 */
 		int packSendPayload(uint8_t * payload, int lenPay);
 
-		/**
-		 * @brief      Receives the message over Serial
-		 *
-		 * @param      payloadReceived  - The received payload as a unit8_t Array
-		 * @return     The number of bytes receeived within the payload
-		 */
-		int receiveUartMessage(uint8_t * payloadReceived);
+		// /**
+		//  * @brief      Receives the message over Serial
+		//  *
+		//  * @param      payloadReceived  - The received payload as a unit8_t Array
+		//  * @return     The number of bytes receeived within the payload
+		//  */
+		// int receiveUartMessage(uint8_t * payloadReceived);
 
 		/**
 		 * @brief      Verifies the message (CRC-16) and extracts the payload
@@ -217,13 +236,13 @@ class VescUart
 		 */
 		bool unpackPayload(uint8_t * message, int lenMes, uint8_t * payload);
 
-		/**
-		 * @brief      Extracts the data from the received payload
-		 *
-		 * @param      message  - The payload to extract data from
-		 * @return     True if the process was a success
-		 */
-		bool processReadPacket(uint8_t * message);
+		// /**
+		//  * @brief      Extracts the data from the received payload
+		//  *
+		//  * @param      message  - The payload to extract data from
+		//  * @return     True if the process was a success
+		//  */
+		// bool processReadPacket(uint8_t * message);
 
 		/**
 		 * @brief      Help Function to print uint8_t array over Serial for Debug
@@ -231,7 +250,7 @@ class VescUart
 		 * @param      data  - Data array to print
 		 * @param      len   - Lenght of the array to print
 		 */
-		void serialPrint(uint8_t * data, int len);
+		void serialPrint(uint8_t * data, int len) const;
 
 };
 

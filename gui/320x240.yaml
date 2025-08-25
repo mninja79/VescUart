@@ -1,0 +1,40 @@
+font: !include
+  file: fonts/fonts.yaml
+  vars:
+    text_sm: 14
+    text_md: 18
+    text_lg: 22
+    text_xl: 26
+    text_xxl: 30
+    icons_sm: 18
+    icons_md: 24
+    icons_lg: 32
+    icons_xl: 40
+    icons_xxl: 48
+
+
+lvgl:
+  default_font: roboto_md
+  pages:
+    - id: gauge_page
+      widgets:
+        - obj:
+            height: 50
+            width: 50
+            align: CENTER
+            bg_color: 0xFFFFFF
+            border_width: 0
+            pad_all: 4
+            widgets:
+              - label:
+                  id: numeric_value
+                  text_font: montserrat_48
+                  align: CENTER
+                  y: -10
+                  text: "42"
+              - label:
+                  id: unit_label
+                  text: "RPM"
+                  align: CENTER
+                  y: 30
+                  text_font: montserrat_24
